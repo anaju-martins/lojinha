@@ -1,0 +1,7 @@
+CREATE TABLE orders (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    moment TIMESTAMP DEFAUL CURRENT_TIMESTAMP NOT NULL,
+    orderStatus INTEGER NOT NULL,
+    clientId TEXT NOT NULL,
+    FOREIGN KEY (clientId) REFERENCES users (id)
+);

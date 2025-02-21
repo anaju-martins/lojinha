@@ -1,21 +1,23 @@
-package com.anaju_martins.lojinha.model.user;
+package com.anaju_martins.lojinha.domain.user;
 
+import com.anaju_martins.lojinha.domain.enums.UserRole;
+import com.anaju_martins.lojinha.domain.order.Order;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "users")
 @Table(name = "users")
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
 public class User implements UserDetails {
 
     @Id
@@ -26,11 +28,21 @@ public class User implements UserDetails {
     private String password;
     private UserRole role;
 
-    public User (String email, String password, UserRole role){
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
+
+    public User(){
+
+    }
+
+    public User (String name, String email, String password, UserRole role){
+        this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,6 +55,11 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -63,5 +80,37 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

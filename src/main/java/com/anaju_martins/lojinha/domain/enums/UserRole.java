@@ -1,4 +1,4 @@
-package com.anaju_martins.lojinha.model.user;
+package com.anaju_martins.lojinha.domain.enums;
 
 public enum UserRole {
 
